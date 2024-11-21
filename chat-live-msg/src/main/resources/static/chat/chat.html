@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Realtime</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style-chat.css">
+    <script src="app-chat.js"></script>
+</head>
+<body>
+    <div id="chat-container">
+        <!-- Lista de usuários -->
+        <div id="user-list">
+            <h5>Usuários Online</h5>
+            <ul id="users">
+            </ul>
+        </div>
+
+        <!-- Área de mensagens -->
+        <div id="chat-area">
+            <ul id="messages"></ul>
+            <div id="input-area">
+                <input id="messageInput" type="text" placeholder="Digite sua mensagem">
+                <button id="sendButton">Enviar</button>
+            </div>
+        </div>
+    </div>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+</body>
+</html>
