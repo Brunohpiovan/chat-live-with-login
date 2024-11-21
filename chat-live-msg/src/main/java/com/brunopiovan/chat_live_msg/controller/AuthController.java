@@ -6,6 +6,7 @@ import com.brunopiovan.chat_live_msg.DTOS.RegisterDTO;
 import com.brunopiovan.chat_live_msg.domain.User;
 import com.brunopiovan.chat_live_msg.repository.UserRepository;
 import com.brunopiovan.chat_live_msg.security.TokenService;
+import com.brunopiovan.chat_live_msg.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +38,9 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private RegisterService registerService;
+
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody AuthenticationDTO body){
@@ -51,27 +55,12 @@ public class AuthController {
         if (this.userRepository.findByEmail(user.getEmail())!=null){
             return ResponseEntity.badRequest().body("Ja existe um usuario com esse email.");
         }
-        user.setSenha(passwordEncoder.encode(user.getSenha()));
-        User novoUser = new User(null, user.getEmail(), user.getSenha(), null);
-        // Definir o caminho do diretório de uploads
-        Path uploadDir = Paths.get("uploads");
-        try {
-            if (!Files.exists(uploadDir)) {
-                Files.createDirectories(uploadDir);
-            }if (profilePicture != null && !profilePicture.isEmpty()) {
-                String fileName = System.currentTimeMillis() + "_" + profilePicture.getOriginalFilename();
-                Path targetLocation = uploadDir.resolve(fileName);
-                Files.copy(profilePicture.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-                String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                        .path("/uploads/")
-                        .path(fileName)
-                        .toUriString();
-                novoUser.setFotoUrl(fileDownloadUri); }
-                this.userRepository.save(novoUser);
-                var token = tokenService.generateToken(novoUser);
-                return ResponseEntity.ok(token);
-    }catch (Exception e) {
-            return ResponseEntity.status(500).body("Erro ao salvar a imagem.");
-        }
+        User novoUser = this.registerService.registrar(user,profilePicture);
+        if(novoUser!=null){
+            var token = tokenService.generateToken(novoUser);
+            return ResponseEntity.ok(token);
+        }else
+            return ResponseEntity.status(500).body("Erro ao salvar a usuario.");
+
     }
 }
