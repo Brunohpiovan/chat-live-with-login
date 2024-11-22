@@ -34,7 +34,7 @@ public class RegisterService {
 
     public User registrar(RegisterDTO user, MultipartFile profilePicture){
         user.setSenha(passwordEncoder.encode(user.getSenha()));
-        User novoUser = new User(null, user.getEmail(), user.getSenha(), null);
+        User novoUser = new User(null,user.getUsername(), user.getEmail(), user.getSenha(), null);
         // Definir o caminho do diretório de uploads
         Path uploadDir = Paths.get("uploads");
         try {

@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
             const formData = new FormData();
             formData.append('registerRequest', new Blob([JSON.stringify({
+                username: document.getElementById('username').value,
                 email: document.getElementById('email').value,
                 senha: document.getElementById('password').value,
             })], { type: 'application/json' }));

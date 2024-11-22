@@ -6,6 +6,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.brunopiovan.chat_live_msg.domain.User;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -18,12 +19,12 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
 
-    public String generateToken(User pessoa){
+    public String generateToken(UserDetails pessoa){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()
                     .withIssuer("chatms-api")
-                    .withSubject(pessoa.getEmail())
+                    .withSubject(pessoa.getUsername())
                     .withExpiresAt(generateExpirationDate())
                     .sign(algorithm);
             return token;

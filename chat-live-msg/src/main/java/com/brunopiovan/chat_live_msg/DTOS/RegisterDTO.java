@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterDTO {
+    private String username;
     private String email;
     private String senha;
 }
